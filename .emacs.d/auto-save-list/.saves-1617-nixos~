@@ -1,0 +1,4 @@
+/sudo:root@localhost:/etc/nixos/configuration.nix
+/tmp/#!sudo:root@localhost:!etc!nixos!configuration.nix#
+/home/ross/.emacs.d/ido.last
+/home/ross/.emacs.d/#ido.last#

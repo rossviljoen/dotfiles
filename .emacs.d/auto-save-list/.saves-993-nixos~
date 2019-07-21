@@ -1,0 +1,4 @@
+/sudo:root@localhost:/etc/nixos/configuration.nix
+/tmp/#!sudo:root@localhost:!etc!nixos!configuration.nix#
+/home/ross/test.xorg
+/home/ross/#test.xorg#
