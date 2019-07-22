@@ -3,6 +3,7 @@
 
 (setq straight-use-package-by-default t)
 
+;; Bootstrap straight
 (defvar bootstrap-version)
 (let ((bootstrap-file
        (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
@@ -34,6 +35,7 @@
 (use-package haskell-mode)
 (use-package sudo-edit)
 (use-package base16-theme)
+(use-package visual-fill-column)
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -69,6 +71,10 @@
 (global-set-key (kbd "M-X") 'smex-major-mode-commands)
 ;;old M-x.
 (global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)
+
+(add-hook 'visual-line-mode-hook #'visual-fill-column-mode)
+(add-hook 'text-mode-hook #'visual-line-mode)
+(setq org-startup-indented t)
 
 ;; TODO: use advice/some other method?
 ;; Treat [] as an indentation level in TeX mode
