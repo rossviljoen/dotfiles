@@ -2,34 +2,48 @@
 
 ;; ----- ido-last-directory-list -----
 (
- ("/home/ross/" . ".xmonad/")
+ ("/home/ross/git/consent/graphs/" . "src/")
+ ("/home/ross/git/consent/" . "graphs/")
+ ("/home/ross/git/" . "consent/")
+ ("/home/ross/" . ".emacs.d/")
 )
 
 ;; ----- ido-work-directory-list -----
 (
+ "/home/ross/.emacs.d/"
+ "/home/ross/git/consent/graphs/src/"
  "/home/ross/.xmonad/"
  "/home/ross/org/"
  "/home/ross/"
- "/home/ross/.emacs.d/"
 )
 
 ;; ----- ido-work-file-list -----
 (
+ "init.el"
+ "institutional.tex"
+ "institutional.pdf"
  "xmonad.hs"
  "bookmarks.org"
  ".Xresources"
- "init.el"
 )
 
 ;; ----- ido-dir-file-cache -----
 (
+ ("/home/ross/.emacs.d/" (23861 54484 40430 918000) "straight/" "elpa/" "backups/" "init.el" "ido.last" "auto-save-list/" "./" "../")
+
+ ("/home/ross/" (23861 54484 28431 235000) "Documents/" ".dbus/" "Music/" ".ICEauthority" "eclipse-workspace/" "Desktop/" ".local/" "eclipse/" ".gnupg/" ".bashrc" ".sudo_as_admin_successful" ".GlobalProtect/" ".p2/" ".xdvirc" ".eclipse/" "Public/" "Templates/" ".m2/" ".vmware/" ".swt/" ".gitconfig" ".config/" ".bash_history" ".tooling/" "Downloads/" "dbconsent/" ".emacs.d/" ".smex-items" ".mozilla/" "Pictures/" ".profile" ".bash_logout" ".cache/" "git/" "dotfiles/" "Videos/" ".ssh/" "./" "../" "snap/" ".thunderbird/" ".psql_history")
+
+ ("/home/ross/git/consent/graphs/src/" (23861 51303 631227 913000) "_region_.log" "_region_.tex" "_region_.aux" "customers-join.csv" "prv_institutional.log" "institutional.pdf" "institutional.tex~" "_region_.pdf" "institutional.aux" "auto/" "institutional.tex" "institutional.dvi" "./" "institutional.log" "../")
+
+ ("/home/ross/git/consent/graphs/" (23845 52384 860218 961000) "rewritingtimeaverageatoms.png" "personalconstraintsrewriting.png" "personalconstraintsunificationexecution.png" "src/" "personalconstraintsexecution.png" "hipposomechoices.png" "hippokeychoice.png" "slowdowntoremoval.png" "hippoallchoices.png" "./" "../")
+
+ ("/home/ross/git/consent/" (23807 51246 549109 111000) "licenses/" "readme.md" "code/" ".git/" "results/" "queries/" "experiments/" "graphs/" "tpch-data/" ".gitignore" ".project" "./" "../")
+
+ ("/home/ross/git/" (23826 13150 161659 586000) "habitat/" "consent/" "./" "../")
+
  ("/home/ross/org/" (23809 35113 757678 319000) "./" "bookmarks.org" "../")
 
- ("/home/ross/.emacs.d/" (23798 64737 786888 731000) "lisp/" "tramp" "recentf" "backups/" "./" "auto-save-list/" "recentf~" "init.el" "#ido.last#" "%backup%~" "../" "url/" "var/" "elpa/" "ido.last")
-
  ("/home/ross/.xmonad/" (23798 32853 932897 514000) "xmonad.hs" "xmonad.o" "xmonad.errors" "./" "xmonad.hi" "../" "xmonad-x86_64-linux")
-
- ("/home/ross/" (23809 33654 932902 970000) ".texlive2018/" ".cache/" "Downloads/" ".config/" ".mozilla/" ".compose-cache/" ".xmobar/" ".screenlayout/" ".xmobarrcold" ".xsession-errors" ".emacs.d/" ".Xauthority" ".nix-defexpr/" ".Xresources" ".xsession-errors.old" "./" "org/" "Desktop/" "result/" ".dbus/" ".local/" ".xmobarrc" ".xmonad/" ".lesshst" ".nix-profile" "../" ".bash_history" ".esd_auth")
 )
 
 ;; ----- ido-unc-hosts-cache -----

@@ -1,9 +1,39 @@
 (server-mode)
-(add-to-list 'load-path "~/.emacs.d/lisp")
-(require 'package)
-(add-to-list 'package-archives
-             '("melpa-stable" . "https://stable.melpa.org/packages/") t)
-(package-initialize)
+;;(add-to-list 'load-path "~/.emacs.d/lisp")
+
+(setq straight-use-package-by-default t)
+
+(defvar bootstrap-version)
+(let ((bootstrap-file
+       (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
+      (bootstrap-version 5))
+  (unless (file-exists-p bootstrap-file)
+    (with-current-buffer
+        (url-retrieve-synchronously
+         "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
+         'silent 'inhibit-cookies)
+      (goto-char (point-max))
+      (eval-print-last-sexp)))
+  (load bootstrap-file nil 'nomessage))
+
+(straight-use-package 'use-package)
+
+(use-package better-defaults)
+(use-package smex)
+(use-package pdf-tools)
+(use-package auctex
+  :defer t
+  :config
+  (setq TeX-auto-save t)
+  (setq TeX-parse-self t)
+  (setq-default TeX-master nil))
+(use-package transpose-frame)
+(use-package smooth-scrolling)
+(use-package frames-only-mode)
+(use-package nix-mode)
+(use-package haskell-mode)
+(use-package sudo-edit)
+(use-package base16-theme)
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -22,10 +52,7 @@
  '(custom-safe-themes
    (quote
     ("527df6ab42b54d2e5f4eec8b091bd79b2fa9a1da38f5addd297d1c91aa19b616" default)))
- '(inhibit-startup-screen t)
- '(package-selected-packages
-   (quote
-    (smex pdf-tools auctex transpose-frame smooth-scrolling frames-only-mode nix-mode haskell-mode sudo-edit base16-theme))))
+ '(inhibit-startup-screen t))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -33,11 +60,6 @@
  ;; If there is more than one, they won't work right.
  )
 
-	
-(setq TeX-auto-save t)
-(setq TeX-parse-self t)
-(setq-default TeX-master nil)
-(require 'better-defaults)
 (load-theme 'base16-nord)
 (global-display-line-numbers-mode 1)
 (smooth-scrolling-mode t)
