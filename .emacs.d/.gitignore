@@ -52,3 +52,6 @@ flycheck_*.el
 
 # ido cache
 ido.last
+
+# org-board archive
+/url/
