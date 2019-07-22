@@ -73,6 +73,7 @@
                           t))))))
       count)))
 
+;; TODO: maybe remove this?
 (defadvice smex (around space-inserts-hyphen activate compile)
   (let ((ido-cannot-complete-command 
          `(lambda ()

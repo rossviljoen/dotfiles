@@ -1,0 +1,43 @@
+\documentclass{article}
+
+\usepackage{pgfplots}
+
+\begin{document}
+
+\pgfplotsset{
+  discard if not/.style 2 args={
+    x filter/.code={
+      \edef\tempa{\thisrow{#1}}
+      \edef\tempb{#2}
+      \ifx\tempa\tempb
+      \else
+      \def\pgfmathresult{inf}
+      \fi
+    }
+  }
+}
+
+\begin{tikzpicture}
+  \begin{axis} [
+      xmin=0,
+      xlabel=Number of Constraints
+      ylabel=
+    ]
+    \foreach\g in {10,13,18}{
+      \addplot table [
+        discard if not={Qid}{\g},
+        x=constraints,
+        y expr=\thisrow{Rexecution} / \thisrow{Qexecution},
+        col sep=comma
+      ]
+      {../../experiments/finegrain/customers-join.csv};
+    }
+    
+  \end{axis}
+\end{tikzpicture}
+
+
+
+%/home/ross/git/consent/experiments/finegrain/customers-join.csv
+
+\end{document}
