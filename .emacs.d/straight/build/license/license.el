@@ -1,1 +1,0 @@
-/home/ross/.emacs.d/straight/repos/license/license.el

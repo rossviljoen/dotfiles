@@ -1,1 +1,0 @@
-/home/ross/.emacs.d/straight/repos/frames-only-mode/frames-only-mode.el
