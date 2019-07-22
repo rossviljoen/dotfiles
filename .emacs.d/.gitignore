@@ -49,3 +49,6 @@ flycheck_*.el
 
 # straight packages
 /straight/
+
+# ido cache
+ido.last
