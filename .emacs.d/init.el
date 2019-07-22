@@ -36,6 +36,9 @@
 (use-package sudo-edit)
 (use-package base16-theme)
 (use-package visual-fill-column)
+(use-package org-board)
+
+(require 'org-protocol)
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -72,6 +75,23 @@
 ;;old M-x.
 (global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)
 
+;; Org mode bindings
+(global-set-key (kbd "C-c l") 'org-store-link)
+(global-set-key (kbd "C-c a") 'org-agenda)
+(global-set-key (kbd "C-c c") 'org-capture)
+
+;; Org-board and capture setup
+(setq org-protocol-default-template-key "b")
+(setq org-board-capture-file "~/org/bookmarks.org")
+(setq org-capture-templates
+      '(("b" "org-board bookmark" entry
+         (file+headline  org-board-capture-file "Unsorted")
+         "* %?%:description\n:PROPERTIES:\n:URL: %:link\n:END:\n\n Added %U")
+        ))
+;; Find a way to hook into specific template
+(add-hook 'org-capture-before-finalize-hook 'org-board-archive)
+
+;; Soft word wrap
 (add-hook 'visual-line-mode-hook #'visual-fill-column-mode)
 (add-hook 'text-mode-hook #'visual-line-mode)
 (setq org-startup-indented t)

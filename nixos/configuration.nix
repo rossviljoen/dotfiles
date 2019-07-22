@@ -19,7 +19,9 @@
       efibootmgr
       
       git
-
+      wget
+      desktop-file-utils
+      
       firefox
       emacs
       jetbrains.idea-ultimate
