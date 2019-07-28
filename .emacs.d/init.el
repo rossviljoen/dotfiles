@@ -65,6 +65,10 @@
  ;; If there is more than one, they won't work right.
  )
 
+;; Put autosave files in .emacs.d/
+(setq auto-save-file-name-transforms
+          `((".*" ,(concat user-emacs-directory "auto-save/") t)))
+
 (load-theme 'base16-nord)
 (global-display-line-numbers-mode 1)
 (smooth-scrolling-mode t)
