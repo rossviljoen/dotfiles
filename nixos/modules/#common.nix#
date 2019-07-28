@@ -8,21 +8,6 @@
   nix.gc.automatic = true;
   nix.optimise.automatic = true;
   
-  boot.loader = {
-    # Use the systemd-boot EFI boot loader.
-    systemd-boot.enable = true;
-    efi.canTouchEfiVariables = true;
-    efi.efiSysMountPoint = "/boot";
-    grub = {
-      enable = true;
-      device = "nodev";
-      efiSupport = true;
-      version = 2;
-      # Autodetect MSWindows in boot loader
-      useOSProber = true;
-    };
-  };
-  
   swapDevices = [ { label = "swap1"; } ];
 
   networking.networkmanager.enable = true;

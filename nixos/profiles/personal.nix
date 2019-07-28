@@ -18,8 +18,23 @@
       jetbrains.idea-ultimate
       haskellPackages.xmobar
       dmenu
-    ];
+    ];  
   
+  boot.loader = {
+    # Use the systemd-boot EFI boot loader.
+    systemd-boot.enable = true;
+    efi.canTouchEfiVariables = true;
+    efi.efiSysMountPoint = "/boot";
+    grub = {
+      enable = true;
+      device = "nodev";
+      efiSupport = true;
+      version = 2;
+      # Autodetect MSWindows in boot loader
+      useOSProber = true;
+    };
+  };
+
   hardware.firmware = [ pkgs.firmwareLinuxNonfree ];
   hardware.opengl.enable = true;
 
