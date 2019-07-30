@@ -35,6 +35,8 @@
     };
   };
 
+  services.syncthing.enable = true;
+  
   hardware.firmware = [ pkgs.firmwareLinuxNonfree ];
   hardware.opengl.enable = true;
 

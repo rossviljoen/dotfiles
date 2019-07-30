@@ -51,6 +51,10 @@
       ];
   };
 
+  services.syncthing.openDefaultPorts = true;
+  services.syncthing.user = "ross";
+  services.syncthing.systemService = false;
+  
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.ross = {
     createHome = true;

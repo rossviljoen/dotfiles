@@ -3,7 +3,6 @@
 {
   imports =
     [
-      ../../profiles/server.nix
       /etc/nixos/hardware-configuration.nix
     ];
 
@@ -27,22 +26,38 @@
     };
   };
 
+  # !!! Adding a swap file is optional, but strongly recommended!
+  swapDevices = [ { device = "/swapfile"; size = 1024; } ];
+
   hardware.enableRedistributableFirmware = true; # Enable support for Pi firmware blobs
 
   networking.hostName = "nixosPi";     # Define your hostname.
-
-  # Configure users for your Pi:
-  users.mutableUsers = false;     # Remove any users not defined in here
-
-  # Define a user account. Don't forget to set a password with ‘passwd’.
-  users.users.ross = {
-    createHome = true;
-    home = "/home/ross";
-    description = "Ross Viljoen";
-    isNormalUser = true;
-    extraGroups = [ "wheel" "networkmanager" ]; # Enable ‘sudo’ and networkmanager for the user.
-    useDefaultShell = true;
+  networking.wireless.enable = true;
+  networking.wireless.networks = {
+    TALKTALK805C7A = {
+      psk = "EEDG7HDQ";
+    };
   };
+  
+  # Preserve space by sacrificing documentation and history
+  services.nixosManual.enable = false;
+  nix.gc.automatic = true;
+  nix.gc.options = "--delete-older-than 30d";
+  boot.cleanTmpDir = true;
+
+  # Configure basic SSH access
+  services.openssh.enable = true;
+  services.openssh.permitRootLogin = "yes";
+
+  # Select internationalisation properties.
+  i18n = {
+    consoleFont = "Lat2-Terminus16";
+    consoleKeyMap = "uk";
+    defaultLocale = "en_GB.UTF-8";
+  };
+
+  # Set your time zone.
+  time.timeZone = "Europe/London";
 
   # This value determines the NixOS release with which your system is to be
   # compatible, in order to avoid breaking some software such as database

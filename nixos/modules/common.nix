@@ -1,27 +1,12 @@
 { config, pkgs, ... }:
 
-{
-  # Only keep last 500MiB of systemd journal
-  services.journald.extraConfig = "SystemMaxUse=500M";
-
-  # Collect nix store garbage and optimise daily
+{  
+  # Preserve space by sacrificing documentation and history
   nix.gc.automatic = true;
-  nix.optimise.automatic = true;
-  
-  boot.loader = {
-    # Use the systemd-boot EFI boot loader.
-    systemd-boot.enable = true;
-    efi.canTouchEfiVariables = true;
-    efi.efiSysMountPoint = "/boot";
-    grub = {
-      enable = true;
-      device = "nodev";
-      efiSupport = true;
-      version = 2;
-      # Autodetect MSWindows in boot loader
-      useOSProber = true;
-    };
-  };
+
+  # Configure basic SSH access
+  services.openssh.enable = true;
+  services.openssh.permitRootLogin = "yes";
   
   swapDevices = [ { label = "swap1"; } ];
 
