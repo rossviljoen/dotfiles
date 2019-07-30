@@ -27,7 +27,9 @@
   :config
   (setq TeX-auto-save t)
   (setq TeX-parse-self t)
-  (setq-default TeX-master nil))
+  (setq-default TeX-master nil)
+   ;; revert pdf-view after compilation TODO: I don't think this works
+  (add-hook 'TeX-after-compilation-finished-functions #'TeX-revert-document-buffer))
 (use-package transpose-frame)
 (use-package smooth-scrolling)
 (use-package frames-only-mode)
@@ -65,6 +67,7 @@
  ;; If there is more than one, they won't work right.
  )
 
+(setq dired-dwim-target t)
 (load-theme 'base16-nord)
 (global-display-line-numbers-mode 1)
 (smooth-scrolling-mode t)
