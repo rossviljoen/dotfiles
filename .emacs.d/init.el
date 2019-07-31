@@ -1,5 +1,5 @@
 (server-mode)
-;;(add-to-list 'load-path "~/.emacs.d/lisp")
+(add-to-list 'load-path "~/.emacs.d/lisp")
 
 (setq straight-use-package-by-default t)
 
@@ -69,7 +69,7 @@
 
 ;; Put autosave and backup files in .emacs.d/
 (setq auto-save-file-name-transforms
-          `((".*" ,(concat user-emacs-directory "auto-save/") t)))
+          `((".*" ,(concat user-emacs-directory "auto-saves/") t)))
 (setq backup-directory-alist
       `(("." . ,(expand-file-name
                  (concat user-emacs-directory "backups")))))
