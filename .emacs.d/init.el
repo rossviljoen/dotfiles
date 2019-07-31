@@ -39,6 +39,7 @@
 (use-package base16-theme)
 (use-package visual-fill-column)
 (use-package org-board)
+(use-package speed-type)
 
 (require 'org-protocol)
 
@@ -69,7 +70,7 @@
 
 ;; Put autosave and backup files in .emacs.d/
 (setq auto-save-file-name-transforms
-          `((".*" ,(concat user-emacs-directory "auto-save/") t)))
+          `((".*" ,(concat user-emacs-directory "auto-saves/") t)))
 (setq backup-directory-alist
       `(("." . ,(expand-file-name
                  (concat user-emacs-directory "backups")))))
