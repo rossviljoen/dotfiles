@@ -39,6 +39,7 @@
 (use-package base16-theme)
 (use-package visual-fill-column)
 (use-package org-board)
+(use-package speed-type)
 
 (require 'org-protocol)
 
