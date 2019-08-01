@@ -38,7 +38,6 @@
 (use-package sudo-edit)
 (use-package base16-theme)
 (use-package visual-fill-column)
-(use-package org-board)
 (use-package speed-type)
 
 (require 'org-protocol)
@@ -93,14 +92,14 @@
 
 ;; Org-board and capture setup
 (setq org-protocol-default-template-key "b")
-(setq org-board-capture-file "~/org/bookmarks.org")
+(setq org-default-notes-file "~/org/gtd/inbox.org")
 (setq org-capture-templates
-      '(("b" "org-board bookmark" entry
-         (file+headline  org-board-capture-file "Unsorted")
-         "* %?%:description\n:PROPERTIES:\n:URL: %:link\n:END:\n\n Added %U")
+      '(("i" "inbox" entry (file org-default-notes-file)
+         "* %?\n")
+        ("p" "org-protocol bookmark" entry
+         (file+olp "~/org/lists.org" "Reading" "Web" "Unsorted")
+         "* [[:link][%:description%?]]")
         ))
-;; Find a way to hook into specific template
-(add-hook 'org-capture-before-finalize-hook 'org-board-archive)
 
 ;; Soft word wrap
 (add-hook 'visual-line-mode-hook #'visual-fill-column-mode)
