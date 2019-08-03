@@ -1,6 +1,22 @@
 (server-mode)
 (add-to-list 'load-path "~/.emacs.d/lisp")
 
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(custom-safe-themes
+   (quote
+    ("527df6ab42b54d2e5f4eec8b091bd79b2fa9a1da38f5addd297d1c91aa19b616" default)))
+ '(inhibit-startup-screen t))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
+
 (setq straight-use-package-by-default t)
 
 ;; Bootstrap straight
@@ -27,6 +43,15 @@
   :config
   (setq TeX-auto-save t)
   (setq TeX-parse-self t)
+  (setq TeX-view-program-selection
+   (quote
+    (((output-dvi has-no-display-manager)
+      "dvi2tty")
+     ((output-dvi style-pstricks)
+      "dvips and gv")
+     (output-dvi "xdvi")
+     (output-pdf "PDF Tools")
+     (output-html "xdg-open"))))
   (setq-default TeX-master nil)
    ;; revert pdf-view after compilation TODO: I don't think this works
   (add-hook 'TeX-after-compilation-finished-functions #'TeX-revert-document-buffer))
@@ -39,33 +64,10 @@
 (use-package base16-theme)
 (use-package visual-fill-column)
 (use-package speed-type)
+(use-package ido-completing-read+)
 
 (require 'org-protocol)
-
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(TeX-view-program-selection
-   (quote
-    (((output-dvi has-no-display-manager)
-      "dvi2tty")
-     ((output-dvi style-pstricks)
-      "dvips and gv")
-     (output-dvi "xdvi")
-     (output-pdf "PDF Tools")
-     (output-html "xdg-open"))))
- '(custom-safe-themes
-   (quote
-    ("527df6ab42b54d2e5f4eec8b091bd79b2fa9a1da38f5addd297d1c91aa19b616" default)))
- '(inhibit-startup-screen t))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
+(require 'dired-x)
 
 ;; Put autosave and backup files in .emacs.d/
 (setq auto-save-file-name-transforms
@@ -90,6 +92,19 @@
 (global-set-key (kbd "C-c a") 'org-agenda)
 (global-set-key (kbd "C-c c") 'org-capture)
 
+(setq org-directory "~/org/")
+(setq org-lists-file (concat org-directory "lists.org"))
+
+(setq ido-everywhere t)
+(setq ido-enable-flex-matching t)
+(setq ido-max-directory-size 100000)
+(ido-mode 1)
+(ido-ubiquitous-mode 1)
+(setq org-completion-use-ido t)
+(setq org-refile-use-outline-path 'file)
+(setq org-outline-path-complete-in-steps nil)
+(setq org-refile-allow-creating-parent-nodes 'confirm)
+
 ;; Org-board and capture setup
 (setq org-protocol-default-template-key "b")
 (setq org-default-notes-file "~/org/gtd/inbox.org")
@@ -97,9 +112,15 @@
       '(("i" "inbox" entry (file org-default-notes-file)
          "* %?\n")
         ("p" "org-protocol bookmark" entry
-         (file+olp "~/org/lists.org" "Reading" "Web" "Unsorted")
+         (file+olp org-lists-file "Reading" "Web" "Unsorted")
          "* [[:link][%:description%?]]")
         ))
+
+;; Org-refile stuff
+(setq org-refile-targets '((org-lists-file :tag . "refile")
+                           ("tasks.org" :level .2)
+                           ("someday.org" :level . 1)
+                            ))
 
 ;; Soft word wrap
 (add-hook 'visual-line-mode-hook #'visual-fill-column-mode)
