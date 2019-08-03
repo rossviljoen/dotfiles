@@ -19,10 +19,6 @@
 
 (setq straight-use-package-by-default t)
 
-;; Load host-specific config
-(defvar host (substring (shell-command-to-string "hostname") 0 -1))
-(load (concat "~/.emacs.d/hosts/" host))
-
 ;; Bootstrap straight
 (defvar bootstrap-version)
 (let ((bootstrap-file
@@ -200,3 +196,7 @@
                           (forward-char)
                           t))))))
       count)))
+
+;; Load host-specific config
+(defvar host (substring (shell-command-to-string "hostname") 0 -1))
+(load (concat "~/.emacs.d/hosts/" host))
