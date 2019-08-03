@@ -61,49 +61,62 @@
 (use-package nix-mode)
 (use-package haskell-mode)
 (use-package sudo-edit)
-(use-package base16-theme)
+(use-package base16-theme :config (load-theme 'base16-nord))
 (use-package visual-fill-column)
 (use-package speed-type)
-(use-package ido-completing-read+)
+(use-package counsel
+  :config
+  (ivy-mode 1)
+  (setq ivy-use-virtual-buffers t)
+  (setq ivy-count-format "(%d/%d) ")
+  (global-set-key (kbd "C-s") 'swiper)
+  (global-set-key (kbd "M-x") 'counsel-M-x)
+  (global-set-key (kbd "C-x C-f") 'counsel-find-file)
+  (global-set-key (kbd "<f1> f") 'counsel-describe-function)
+  (global-set-key (kbd "<f1> v") 'counsel-describe-variable)
+  (global-set-key (kbd "<f1> l") 'counsel-find-library)
+  (global-set-key (kbd "<f2> i") 'counsel-info-lookup-symbol)
+  (global-set-key (kbd "<f2> u") 'counsel-unicode-char)
+  (global-set-key (kbd "C-c c") 'counsel-compile)
+  (global-set-key (kbd "C-c g") 'counsel-git)
+  (global-set-key (kbd "C-c j") 'counsel-git-grep)
+  (global-set-key (kbd "C-c k") 'counsel-ag)
+  (global-set-key (kbd "C-x l") 'counsel-locate)
+  (global-set-key (kbd "C-S-o") 'counsel-rhythmbox)
+  )
 
 (require 'org-protocol)
 (require 'dired-x)
 
-;; Put autosave and backup files in .emacs.d/
+;; Miscellaneous emacs configuration
 (setq auto-save-file-name-transforms
           `((".*" ,(concat user-emacs-directory "auto-saves/") t)))
 (setq backup-directory-alist
       `(("." . ,(expand-file-name
                  (concat user-emacs-directory "backups")))))
 (setq dired-dwim-target t)
-
-(load-theme 'base16-nord)
 (global-display-line-numbers-mode 1)
 (smooth-scrolling-mode t)
 (auto-fill-mode t)
 (setq display-line-numbers-type 'relative)
-(global-set-key (kbd "M-x") 'smex)
-(global-set-key (kbd "M-X") 'smex-major-mode-commands)
-;;old M-x.
-(global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)
 
-;; Org mode bindings
+;; Org mode configuration
 (global-set-key (kbd "C-c l") 'org-store-link)
 (global-set-key (kbd "C-c a") 'org-agenda)
 (global-set-key (kbd "C-c c") 'org-capture)
 
+(setq org-startup-indented t)
 (setq org-directory "~/org/")
 (setq org-lists-file (concat org-directory "lists.org"))
 
-(setq ido-everywhere t)
-(setq ido-enable-flex-matching t)
-(setq ido-max-directory-size 100000)
-(ido-mode 1)
-(ido-ubiquitous-mode 1)
-(setq org-completion-use-ido t)
-(setq org-refile-use-outline-path 'file)
+(setq org-refile-use-outline-path t)
 (setq org-outline-path-complete-in-steps nil)
 (setq org-refile-allow-creating-parent-nodes 'confirm)
+(defun ross/verify-refile-target ()
+  ;; Make sure refile target has a child
+  (save-excursion (org-goto-first-child))
+  )
+(setq org-refile-target-verify-function 'ross/verify-refile-target)
 
 ;; Org-board and capture setup
 (setq org-protocol-default-template-key "b")
@@ -117,15 +130,14 @@
         ))
 
 ;; Org-refile stuff
-(setq org-refile-targets '((org-lists-file :tag . "refile")
-                           ("tasks.org" :level .2)
+(setq org-refile-targets '((org-lists-file :maxlevel . 3)
+                           ("tasks.org" :level . 2)
                            ("someday.org" :level . 1)
-                            ))
+                           ))
 
 ;; Soft word wrap
 (add-hook 'visual-line-mode-hook #'visual-fill-column-mode)
 (add-hook 'text-mode-hook #'visual-line-mode)
-(setq org-startup-indented t)
 
 ;; TODO: use advice/some other method?
 ;; Treat [] as an indentation level in TeX mode
@@ -151,13 +163,3 @@
                           (forward-char)
                           t))))))
       count)))
-
-;; TODO: maybe remove this?
-(defadvice smex (around space-inserts-hyphen activate compile)
-  (let ((ido-cannot-complete-command 
-         `(lambda ()
-            (interactive)
-            (if (string= " " (this-command-keys))
-                (insert ?-)
-              (funcall ,ido-cannot-complete-command)))))
-    ad-do-it))
