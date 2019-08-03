@@ -19,6 +19,10 @@
 
 (setq straight-use-package-by-default t)
 
+;; Load host-specific config
+(defvar host (substring (shell-command-to-string "hostname") 0 -1))
+(load (concat "~/.emacs.d/hosts/" host))
+
 ;; Bootstrap straight
 (defvar bootstrap-version)
 (let ((bootstrap-file
@@ -73,6 +77,8 @@
   (("C-s" . swiper)
    ("M-x" . counsel-M-x)
    ("C-x C-f" . counsel-find-file)
+   ("C-x C-d" . counsel-dired)
+   ("C-x d" . counsel-dired)
    ("<f1> f" . counsel-describe-function)
    ("<f1> v" . counsel-describe-variable)
    ("<f1> l" . counsel-find-library)

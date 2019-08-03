@@ -10,6 +10,8 @@
   # Wifi drivers
   boot.extraModulePackages = [ config.boot.kernelPackages.rtl8812au ];
 
+  networking.hostName = "erebus";
+
   services.xserver = {
     # xrandr --output DVI-D-0 --rotate right --pos 0x0 --output DVI-I-1 --pos 1080x420 --rate 144
     displayManager.lightdm.greeters.mini.user = "ross";
