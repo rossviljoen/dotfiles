@@ -107,6 +107,29 @@
 (auto-fill-mode t)
 (setq display-line-numbers-type 'relative)
 
+;; Ibuffer configuration
+(setq ibuffer-show-empty-filter-groups nil)
+(setq ibuffer-saved-filter-groups
+      '(("Home"
+         ("Dired" (mode . dired-mode))
+         ("Org" (or (name . "^.*org$")
+                    (mode . org-mode)))
+         ("Shell" (or (mode . eshell-mode) (mode . shell-mode)))
+         ("Emacs" (or
+                   (name . "^\\*scratch\\*$")
+                   (name
+                    . "^\\*Messages\\*$")))
+         ("Magit" (or (name . "^magit*") (mode . magit-mode)))
+         ("Help" (or (name . "\*Help\*")
+		     (name . "\*Apropos\*")
+		     (name . "\*info\*")))
+         )))
+(add-hook 'ibuffer-mode-hook
+	  '(lambda ()
+             (ibuffer-auto-mode 1)
+	     (ibuffer-switch-to-saved-filter-groups "Home")))
+
+
 ;; Org mode configuration
 (global-set-key (kbd "C-c l") 'org-store-link)
 (global-set-key (kbd "C-c a") 'org-agenda)
@@ -116,31 +139,38 @@
 (setq org-directory "~/org/")
 (setq org-lists-file (concat org-directory "lists.org"))
 
-(setq org-refile-use-outline-path t)
-(setq org-outline-path-complete-in-steps nil)
-(setq org-refile-allow-creating-parent-nodes 'confirm)
+(setq org-todo-keywords '((sequence "TODO" "WAITING" "|"
+                                    "DONE")))
+
+;; Only use headlines with at least one child
 (defun ross/verify-refile-target ()
-  ;; Make sure refile target has a child
   (save-excursion (org-goto-first-child))
   )
-(setq org-refile-target-verify-function 'ross/verify-refile-target)
+;; (setq org-refile-target-verify-function 'ross/verify-refile-target)
 
-;; Org-board and capture setup
+;; Org capture and protocol setup
 (setq org-protocol-default-template-key "b")
 (setq org-default-notes-file "~/org/gtd/inbox.org")
+(global-set-key (kbd "C-c i") (lambda () (interactive) (find-file
+                                                        org-default-notes-file)))
+(global-set-key (kbd "C-c t") (lambda () (interactive) (find-file
+                                                        "~/org/gtd/tasks.org")))
 (setq org-capture-templates
       '(("i" "inbox" entry (file org-default-notes-file)
          "* %?\n")
         ("p" "org-protocol bookmark" entry
-         (file+olp org-lists-file "Reading" "Web" "Unsorted")
+         (file org-default-notes-file)
          "* [[:link][%:description%?]]")
         ))
 
 ;; Org-refile stuff
 (setq org-refile-targets '((org-lists-file :maxlevel . 3)
-                           ("tasks.org" :level . 2)
+                           ("tasks.org" :level . 1)
                            ("someday.org" :level . 1)
                            ))
+(setq org-refile-use-outline-path t)
+(setq org-outline-path-complete-in-steps nil)
+(setq org-refile-allow-creating-parent-nodes 'confirm)
 
 ;; Soft word wrap
 (add-hook 'visual-line-mode-hook #'visual-fill-column-mode)
