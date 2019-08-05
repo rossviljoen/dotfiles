@@ -134,6 +134,7 @@
 (setq org-startup-indented t)
 (setq org-directory "~/org/")
 (setq org-lists-file (concat org-directory "lists.org"))
+(setq org-tags-column -66)
 
 (setq org-todo-keywords '((sequence "TODO" "WAITING" "|"
                                     "DONE")))
