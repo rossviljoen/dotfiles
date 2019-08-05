@@ -18,7 +18,6 @@
       wget
       lsof
       rclone
-      gitAndTools.git-annex
-      gitAndTools.git-annex-remote-rclone
+      unzip      
     ];
 }

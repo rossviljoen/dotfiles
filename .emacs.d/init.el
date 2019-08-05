@@ -37,7 +37,9 @@
 
 (use-package better-defaults)
 (use-package smex)
-(use-package pdf-tools)
+(use-package pdf-tools
+  :config
+  (pdf-tools-install))
 (use-package auctex
   :defer t
   :config
@@ -133,7 +135,10 @@
 
 (setq org-startup-indented t)
 (setq org-directory "~/org/")
-(setq org-lists-file (concat org-directory "lists.org"))
+(setq org-default-notes-file (concat org-directory "gtd/inbox.org"))
+(setq ross/org-tasks-file (concat org-directory "gtd/tasks.org"))
+(setq ross/org-someday-file (concat org-directory "gtd/someday.org"))
+(setq ross/org-lists-file (concat org-directory "lists.org"))
 
 (setq org-todo-keywords '((sequence "TODO" "WAITING" "|"
                                     "DONE")))
@@ -146,27 +151,50 @@
 
 ;; Org capture and protocol setup
 (setq org-protocol-default-template-key "b")
-(setq org-default-notes-file "~/org/gtd/inbox.org")
 (global-set-key (kbd "C-c i") (lambda () (interactive) (find-file
                                                         org-default-notes-file)))
 (global-set-key (kbd "C-c t") (lambda () (interactive) (find-file
-                                                        "~/org/gtd/tasks.org")))
+                                                        ross/org-tasks-file)))
 (setq org-capture-templates
       '(("i" "inbox" entry (file org-default-notes-file)
          "* %?\n")
         ("p" "org-protocol bookmark" entry
          (file org-default-notes-file)
-         "* [[:link][%:description%?]]")
+         "* [[%:link][%:description%?]]")
         ))
 
 ;; Org-refile stuff
-(setq org-refile-targets '((org-lists-file :maxlevel . 3)
-                           ("tasks.org" :level . 1)
-                           ("someday.org" :level . 1)
+(setq org-refile-targets '((ross/org-lists-file :maxlevel . 3)
+                           (ross/org-tasks-file :level . 1)
+                           (ross/org-someday-file :level . 1)
                            ))
 (setq org-refile-use-outline-path t)
 (setq org-outline-path-complete-in-steps nil)
 (setq org-refile-allow-creating-parent-nodes 'confirm)
+
+;; Org-agenda settings
+(setq org-agenda-block-separator nil)
+(setq org-agenda-start-with-log-mode t)
+
+;; (todo "TODO"
+;; ((org-agenda-overriding-header "One-off Tasks")
+;;  (org-agenda-files 'ross/org-tasks-file)
+;;  (org-agenda-skip-function '(org-agenda-skip-entry-if 'deadline 'scheduled))))
+
+(setq org-agenda-custom-commands
+      '(("r" "Agenda"
+         ((agenda ""
+                  ((org-agenda-span 'day)
+                   (org-deadline-warning-days 365)))
+          (search "*"
+                  ((org-agenda-overriding-header "To Refile")
+                       (org-agenda-files `(,org-default-notes-file))))
+          (todo "TODO"
+                ((org-agenda-overriding-header "Projects")
+                 (org-agenda-files `(,ross/org-tasks-file))
+                 ;; (org-agenda-skip-function #'jethro/org-agenda-skip-all-siblings-but-first)
+                 ))
+          ))))
 
 ;; Soft word wrap
 (add-hook 'visual-line-mode-hook #'visual-fill-column-mode)
