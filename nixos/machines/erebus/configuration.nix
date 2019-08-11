@@ -3,14 +3,61 @@
 {
   imports =
     [
-      ../../profiles/personal.nix
+      ../../modules/common.nix
+      ../../modules/xserver.nix
+      ../../modules/compton.nix
       /etc/nixos/hardware-configuration.nix
     ];
 
+  environment.systemPackages = with pkgs;
+    [
+      desktop-file-utils
+      firefox
+      emacs
+      anki
+      texlive.combined.scheme-full
+      jetbrains.idea-ultimate
+      haskellPackages.xmobar
+      dmenu
+
+      # Haskell development
+      haskellPackages.ghc
+      haskellPackages.cabal-install
+      haskellPackages.cabal2nix
+    ];
+  
   # Wifi drivers
   boot.extraModulePackages = [ config.boot.kernelPackages.rtl8812au ];
-
+  
+  boot.loader = {
+    # Use the systemd-boot EFI boot loader.
+    systemd-boot.enable = true;
+    efi.canTouchEfiVariables = true;
+    efi.efiSysMountPoint = "/boot";
+    grub = {
+      enable = true;
+      device = "nodev";
+      efiSupport = true;
+      version = 2;
+      # Autodetect MSWindows in boot loader
+      useOSProber = true;
+    };
+  };
+  
   networking.hostName = "erebus";
+
+  hardware.firmware = [ pkgs.firmwareLinuxNonfree ];
+  hardware.opengl.enable = true;
+
+  # Enable suspend to RAM
+  powerManagement.enable = true;
+
+  # Enable CUPS to print documents.
+  services.printing.enable = true;
+
+  # Enable sound.
+  sound.enable = true;
+  hardware.pulseaudio.enable = true;
 
   services.xserver = {
     # xrandr --output DVI-D-0 --rotate right --pos 0x0 --output DVI-I-1 --pos 1080x420 --rate 144
@@ -53,9 +100,14 @@
       ];
   };
 
+  services.syncthing.enable = true;
   services.syncthing.openDefaultPorts = true;
   services.syncthing.user = "ross";
   services.syncthing.systemService = false;
+
+  # Run emacs as a service
+  services.emacs.enable = true;
+  services.emacs.defaultEditor = true;
   
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.ross = {

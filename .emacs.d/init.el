@@ -89,6 +89,7 @@
    ("C-x l" . counsel-locate)
    ("C-S-o" . counsel-rhythmbox)))
 (use-package magit)
+(use-package flycheck)
 
 (require 'org-protocol)
 (require 'dired-x)
@@ -133,6 +134,7 @@
 (global-set-key (kbd "C-c a") 'org-agenda)
 (global-set-key (kbd "C-c c") 'org-capture)
 
+(setq org-tags-column -66)
 (setq org-startup-indented t)
 (setq org-directory "~/org/")
 (setq org-default-notes-file (concat org-directory "gtd/inbox.org"))

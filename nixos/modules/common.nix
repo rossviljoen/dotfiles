@@ -1,6 +1,22 @@
 { config, pkgs, ... }:
 
-{  
+{
+  # Installed packages
+  nixpkgs.config.allowUnfree = true;
+  environment.systemPackages = with pkgs;
+    [
+      parted
+      gparted
+      efibootmgr
+      gnupg
+      git
+      wget
+      lsof
+      rclone
+      unzip      
+    ];
+
+
   # Preserve space by sacrificing documentation and history
   nix.gc.automatic = true;
 
