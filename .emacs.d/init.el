@@ -106,10 +106,7 @@
       `(("." . ,(expand-file-name
                  (concat user-emacs-directory "backups")))))
 (setq dired-dwim-target t)
-(global-display-line-numbers-mode 1)
 (smooth-scrolling-mode t)
-(auto-fill-mode t)
-(setq display-line-numbers-type 'relative)
 
 ;; Ibuffer configuration
 (setq ibuffer-show-empty-filter-groups nil)
