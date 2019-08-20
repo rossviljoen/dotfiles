@@ -13,7 +13,8 @@
       wget
       lsof
       rclone
-      unzip      
+      unzip
+      imagemagick
     ];
 
 

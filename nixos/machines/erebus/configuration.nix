@@ -9,6 +9,15 @@
       /etc/nixos/hardware-configuration.nix
     ];
 
+  # Enable imagemagick support in emacs (has to be built locally).
+  nixpkgs.overlays =
+    [(self: super: {
+      emacs = super.emacs.override {
+        imagemagick = pkgs.imagemagickBig;
+      };
+    }
+    )];
+  
   environment.systemPackages = with pkgs;
     [
       desktop-file-utils

@@ -61,7 +61,9 @@
 (use-package smooth-scrolling)
 (use-package frames-only-mode)
 (use-package nix-mode)
-(use-package haskell-mode)
+(use-package haskell-mode
+  :config
+  (add-hook 'haskell-mode-hook 'interactive-haskell-mode))
 (use-package sudo-edit)
 (use-package base16-theme :config (load-theme 'base16-nord))
 (use-package visual-fill-column)
@@ -90,6 +92,9 @@
    ("C-S-o" . counsel-rhythmbox)))
 (use-package magit)
 (use-package flycheck)
+(use-package elpy
+  :init
+  (elpy-enable))
 
 (require 'org-protocol)
 (require 'dired-x)
