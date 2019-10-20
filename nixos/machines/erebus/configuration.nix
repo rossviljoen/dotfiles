@@ -18,7 +18,12 @@
     }
     )];
   
-  environment.systemPackages = with pkgs;
+  environment.systemPackages = let
+    myPythonPackages = pythonPackages: with pythonPackages; [
+      pip
+      setuptools
+    ];
+    in with pkgs;
     [
       desktop-file-utils
       firefox
@@ -33,6 +38,11 @@
       haskellPackages.ghc
       haskellPackages.cabal-install
       haskellPackages.cabal2nix
+
+      # Python development
+      (python3.withPackages myPythonPackages)
+      pipenv
+      jetbrains.pycharm-community
     ];
   
   # Wifi drivers

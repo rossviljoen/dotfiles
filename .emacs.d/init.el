@@ -90,7 +90,9 @@
    ("C-c k" . counsel-ag)
    ("C-x l" . counsel-locate)
    ("C-S-o" . counsel-rhythmbox)))
-(use-package magit)
+(use-package magit
+  :bind
+  (("C-x g" . magit-status)))
 (use-package flycheck)
 (use-package elpy
   :init
