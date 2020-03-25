@@ -25,8 +25,6 @@
   services.openssh.enable = true;
   services.openssh.permitRootLogin = "yes";
   
-  swapDevices = [ { label = "swap1"; } ];
-
   networking.networkmanager.enable = true;
 
   # Enable the OpenSSH server.
