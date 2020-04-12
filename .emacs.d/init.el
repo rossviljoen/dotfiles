@@ -35,8 +35,9 @@
 
 (straight-use-package 'use-package)
 
-(use-package better-defaults)
-(use-package smex)
+(use-package better-defaults
+  :config
+  (ido-mode nil))
 (use-package pdf-tools
   :config
   (pdf-tools-install))
@@ -58,24 +59,39 @@
    ;; revert pdf-view after compilation TODO: I don't think this works
   (add-hook 'TeX-after-compilation-finished-functions #'TeX-revert-document-buffer))
 (use-package transpose-frame)
-(use-package smooth-scrolling)
+(use-package smooth-scrolling
+	     :config
+	     (smooth-scrolling-mode t))
 (use-package nix-mode)
 (use-package haskell-mode
+	     :config
+	     (add-hook 'haskell-mode-hook 'interactive-haskell-mode))
+(use-package tuareg
   :config
-  (add-hook 'haskell-mode-hook 'interactive-haskell-mode))
+  (add-to-list 'load-path "~/.nix-profile/share/emacs/site-lisp")
+  (require 'merlin)
+  (add-hook 'tuareg-mode-hook 'merlin-mode t)
+  (setq merlin-command "ocamlmerlin"))
+(use-package utop
+  )
 (use-package sudo-edit)
-(use-package base16-theme :config (load-theme 'base16-nord))
+(use-package base16-theme
+  :config
+  (load-theme (intern (or (getenv "B16THEME") "base16-nord")) t)) ;; Try to load a theme from env variable
 (use-package visual-fill-column)
 (use-package speed-type)
 (use-package counsel
   :config
   (ivy-mode 1)
+  (counsel-mode 1)
   (setq ivy-use-virtual-buffers t)
   (setq ivy-count-format "(%d/%d) ")
+  (add-to-list 'ivy-display-functions-alist '(counsel-company . ivy-display-function-overlay))
   :bind
   (("C-s" . swiper)
    ("M-x" . counsel-M-x)
    ("C-x C-f" . counsel-find-file)
+   ("C-x f" . counsel-find-file)
    ("C-x C-d" . counsel-dired)
    ("C-x d" . counsel-dired)
    ("<f1> f" . counsel-describe-function)
@@ -83,33 +99,74 @@
    ("<f1> l" . counsel-find-library)
    ("<f2> i" . counsel-info-lookup-symbol)
    ("<f2> u" . counsel-unicode-char)
-   ("C-c c" . counsel-compile)
    ("C-c g" . counsel-git)
+   ("C-c c" . counsel-compile)
    ("C-c j" . counsel-git-grep)
-   ("C-c k" . counsel-ag)
+   ("C-c b" . counsel-bookmark)
+   ("C-c L" . counsel-git-log)
    ("C-x l" . counsel-locate)
-   ("C-S-o" . counsel-rhythmbox)))
+   ("C-S-o" . counsel-rhythmbox)
+   ("<C-tab>" . counsel-company)
+   ;; ("C-c k" . counsel-ag)
+   ))
 (use-package magit
   :bind
   (("C-x g" . magit-status)))
-;; (use-package frames-only-mode)
+(use-package frames-only-mode
+  :config
+  (frames-only-mode t))
+(use-package company ;; Autocomplete
+  :config
+  (global-company-mode t)
+  (setq company-show-numbers 't)
+  ;; :hook
+  ;; (nix-mode . (lambda() (setq-local company-backends (company-lsp :with company-dabbrev :with company-yasnippet :with company-files))))
+  )
+(use-package ivy-prescient
+  :config
+  (ivy-prescient-mode t)
+  (prescient-persist-mode t))
+;; (use-package company-nixos-options ;; Seems pretty broken
+;;   :config
+;;   (add-to-list 'company-backends 'company-nixos-options))
 ;; (use-package flycheck)
 ;; (use-package elpy
 ;;   :init
 ;;   (elpy-enable))
-;; (use-package jupyter)
+(use-package jupyter)
+(use-package rainbow-mode)
+(use-package native-complete
+  :init
+  (with-eval-after-load 'shell (native-complete-setup-bash)))
 
-;; (require 'jupyter)
+(require 'jupyter)
 (require 'dired-x)
 
 ;; Miscellaneous emacs configuration
+(let ((autosave-dir (concat user-emacs-directory "auto-saves/")))
+  (unless (file-exists-p autosave-dir)
+    (make-directory autosave-dir)))
 (setq auto-save-file-name-transforms
-          `((".*" ,(concat user-emacs-directory "auto-saves/") t)))
+      `((".*" ,(concat user-emacs-directory "auto-saves/") t)))
 (setq backup-directory-alist
       `(("." . ,(expand-file-name
                  (concat user-emacs-directory "backups")))))
 (setq dired-dwim-target t)
-(smooth-scrolling-mode t)
+(setq display-line-numbers-type 'relative)
+(global-display-line-numbers-mode t)
+;; 
+(global-set-key (kbd "M-SPC") 'cycle-spacing)
+
+(connection-local-set-profile-variables
+ 'remote-bash
+ '((shell-file-name . "/bin/bash")
+   (shell-command-switch . "-c")
+   (shell-interactive-switch . "-i")
+   (shell-login-switch . "-l")))
+
+(connection-local-set-profiles
+ '(:application tramp :protocol "ssh" :machine "dfly")
+ 'remote-bash)
 
 ;; Ibuffer configuration
 (setq ibuffer-show-empty-filter-groups nil)
@@ -121,17 +178,22 @@
          ("Shell" (or (mode . eshell-mode) (mode . shell-mode)))
          ("Emacs" (or
                    (name . "^\\*scratch\\*$")
-                   (name
-                    . "^\\*Messages\\*$")))
+                   (name . "^\\*Messages\\*$")))
          ("Magit" (or (name . "^magit*") (mode . magit-mode)))
          ("Help" (or (name . "\*Help\*")
-		     (name . "\*Apropos\*")
-		     (name . "\*info\*")))
+                     (name . "\*Apropos\*")
+                     (name . "\*info\*")))
          )))
 (add-hook 'ibuffer-mode-hook
-	  '(lambda ()
+          '(lambda ()
              (ibuffer-auto-mode 1)
-	     (ibuffer-switch-to-saved-filter-groups "Home")))
+             (ibuffer-switch-to-saved-filter-groups "Home")))
+
+;; Get bash autocomplete working in M-x shell
+;; (setq explicit-bash-args
+;;           (delete "--noediting" explicit-bash-args))
+;; (advice-add 'comint-term-environment
+;;             :filter-return (lambda (env) (cons "INSIDE_EMACS" env)))
 
 (add-hook 'visual-line-mode-hook #'visual-fill-column-mode)
 (add-hook 'text-mode-hook #'visual-line-mode)
@@ -160,8 +222,6 @@
                           (forward-char)
                           t))))))
       count)))
-
-
 
 ;; Org mode configuration
 ;; (global-set-key (kbd "C-c l") 'org-store-link)
@@ -231,4 +291,3 @@
 ;;                  ;; (org-agenda-skip-function #'jethro/org-agenda-skip-all-siblings-but-first)
 ;;                  ))
 ;;           ))))
-

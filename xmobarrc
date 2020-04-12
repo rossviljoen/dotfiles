@@ -1,9 +1,9 @@
 Config { font = "-*-Fixed-Bold-R-Normal-*-13-*-*-*-*-*-*-*"
-       , bgColor = "#3b4252"
-       , fgColor = "#d8dee9"
-       , position = TopW L 100
-       , borderColor = "#4c566a"
-       , commands = [ Run Cpu ["-L","3","-H","50","--normal","#a3be8c","--high","#bf616a"] 10
+       , bgColor = "{{xmobarBG}}"
+       , fgColor = "{{base04}}"
+       , position = BottomW L 100
+       , borderColor = "{{base03}}"
+       , commands = [ Run Cpu ["-L","3","-H","50","--normal","{{base0E}}","--high","{{base0B}}"] 10
                     , Run Memory ["-t","Mem: <usedratio>%"] 10
                     , Run Swap [] 10
                     , Run Date "%a %b %_d %l:%M%p" "date" 10
@@ -12,5 +12,5 @@ Config { font = "-*-Fixed-Bold-R-Normal-*-13-*-*-*-*-*-*-*"
                     ]
        , sepChar = "%"
        , alignSep = "}{"
-       , template = "%StdinReader% }{ %cpu% | %memory% * %swap%    <fc=#b48ead>%date%</fc> | %EGHI%"
+       , template = "%StdinReader% }{ %cpu% | %memory% * %swap%    <fc={{base0F}}>%date%</fc> | %EGHI%"
        }
