@@ -50,6 +50,7 @@ myConfig = def
   , focusedBorderColor = "{{xmonadFB}}"
   , normalBorderColor = "{{xmonadNB}}"
   , borderWidth = 4
+  , terminal = "urxvt"
   } `additionalKeys` myKeys
 
 myKeys =
@@ -57,10 +58,10 @@ myKeys =
   , ((myModMask .|. mod1Mask, xK_u), spawn "shutdown now")
   , ((myModMask .|. mod1Mask, xK_s), spawn "systemctl suspend &")
   , ((myModMask, xK_b), sendMessage ToggleStruts)
-  , ((myModMask .|. mod1Mask, xK_l), spawn "dm-tool lock")
   , ((0, xK_F9), spawn "emacsclient -c -n -e '(switch-to-buffer nil)'")
   , ((0, xK_F10), spawn "firefox")
   , ((myModMask , xK_c), kill)
+  -- , ((myModMask .|. mod1Mask, xK_l), spawn "dm-tool lock")
   ] ++
     
     -- Switch to workspace N, M-[1..9]

@@ -8,7 +8,7 @@ with import <home-manager/modules/lib/dag.nix> { inherit lib; };
 
 let
   theme = import ./themes/theme.nix;
-  bgCommand = "${hsetroot}/bin/hsetroot -solid '${theme.base01}'";
+  bgCommand = "${hsetroot}/bin/hsetroot -solid '${theme.xmonadBG}'";
 in
 
 {
@@ -18,12 +18,24 @@ in
 
   home-manager.users.ross = { pkgs, ... }: {
 
+    nixpkgs.config.allowUnfree = true;
+    home.packages = with pkgs; [
+      ocamlPackages.merlin
+      ocamlPackages.ocp-indent
+      ocamlPackages.utop
+      
+      spotify
+      simplescreenrecorder
+    ];
+
     nixpkgs.overlays =
       [(self: super: {
         emacs = super.emacs.override {
           imagemagick = pkgs.imagemagickBig;
         };
       })];
+
+    services.lorri.enable = true;
 
     services.compton = {
       enable = true;
@@ -53,11 +65,11 @@ in
       enableBashIntegration = true;
     };
 
-    programs.opam = {
+    programs.urxvt = {
       enable = true;
-      enableBashIntegration = true;
+      scroll.bar.enable = false;
     };
-
+    
     programs.autorandr = {
       enable = true;
       profiles = {
@@ -86,12 +98,15 @@ in
     };
 
     home = {
-      keyboard.layout = "gb";
+      keyboard = {
+        layout = "gb";
+        options = [ "ctrl:swapcaps" ];
+      };
       
       sessionVariables = {
         EDITOR = "emacsclient -c -a emacs";
         VISUAL = "emacsclient -c -a emacs";
-        B16THEME = theme.name;
+        THEME = theme.name;
       };
       
       file =
@@ -121,6 +136,65 @@ in
       };
     };
 
+    xresources = {
+      extraConfig = 
+        ''
+          #define base00 ${theme.base00}
+          #define base01 ${theme.base01}
+          #define base02 ${theme.base02}
+          #define base03 ${theme.base03}
+          #define base04 ${theme.base04}
+          #define base05 ${theme.base05}
+          #define base06 ${theme.base06}
+          #define base07 ${theme.base07}
+          #define base08 ${theme.base08}
+          #define base09 ${theme.base09}
+          #define base0A ${theme.base0A}
+          #define base0B ${theme.base0B}
+          #define base0C ${theme.base0C}
+          #define base0D ${theme.base0D}
+          #define base0E ${theme.base0E}
+          #define base0F ${theme.base0F}
+          #define xmonadBG ${theme.xmonadBG}
+          #define xmonadFB ${theme.xmonadFB}
+          #define xmonadNB ${theme.xmonadNB}
+          #define xmobarBG ${theme.xmobarBG}
+
+          *foreground:  base05
+          *background:  base00
+          *cursorColor: base05
+
+          *xmonadFocused:     xmonadFB
+          *xmonadNonFocused:  xmonadNB
+          *xmobarBackground:  xmobarBG
+
+          *color0:    base00
+          *color1:    base08
+          *color2:    base0B
+          *color3:    base0A
+          *color4:    base0D
+          *color5:    base0E
+          *color6:    base0C
+          *color7:    base05
+
+          *color8:    base03
+          *color9:    base08
+          *color10:   base0B
+          *color11:   base0A
+          *color12:   base0D
+          *color13:   base0E
+          *color14:   base0C
+          *color15:   base07
+
+          *color16:   base09
+          *color17:   base0F
+          *color18:   base01
+          *color19:   base02
+          *color20:   base04
+          *color21:   base06
+        '';
+    };
+    
     xsession = {
       enable = true;
       numlock.enable = true;

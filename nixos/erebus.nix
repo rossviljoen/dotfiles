@@ -1,5 +1,14 @@
 { config, pkgs, ... }:
 
+let
+  customHosts =
+    ''
+    0.0.0.0 youtube.com
+    0.0.0.0 www.youtube.com
+    0.0.0.0 bbc.co.uk
+    0.0.0.0 www.bbc.co.uk
+    '';
+in
 {
   imports =
     [
@@ -8,6 +17,10 @@
     ];
 
   nixpkgs.config.allowUnfree = true;
+
+  
+  virtualisation.virtualbox.host.enable = true;
+  users.extraGroups.vboxusers.members = [ "ross" ];
   
   environment.systemPackages = let
     myPythonPackages = pythonPackages: with pythonPackages; [
@@ -15,6 +28,12 @@
       setuptools
       jupyter
       scipy
+      pandas
+      numpy
+      matplotlib
+      google_cloud_bigquery
+      google_cloud_pubsub
+      google-auth-oauthlib
     ];
     in with pkgs;
       [
@@ -37,6 +56,7 @@
         emacs
         texlive.combined.scheme-full
         slack
+        pandoc
 
         # XMonad and XMobar
         haskellPackages.xmonad
@@ -59,7 +79,7 @@
         # ocaml
         # dune
         # ocamlPackages.merlin
-        
+
         # Other programming
         julia_11
         jetbrains.idea-ultimate
@@ -72,24 +92,28 @@
   boot.extraModulePackages = [ config.boot.kernelPackages.rtl8812au ];
 
   swapDevices = [ { label = "swap"; } ];
-  
+
+  boot.tmpOnTmpfs = true;
   boot.loader = {
     # Use the systemd-boot EFI boot loader.
-    systemd-boot.enable = true;
+    systemd-boot.enable = false;
     efi.canTouchEfiVariables = true;
     efi.efiSysMountPoint = "/boot";
     grub = {
       enable = true;
       device = "nodev";
       efiSupport = true;
-      version = 2;
+      # efiInstallAsRemovable = true;
       # Autodetect MSWindows in boot loader
       useOSProber = true;
     };
   };
   
-  networking.hostName = "erebus";
-  networking.networkmanager.enable = true;
+  networking = {
+    hostName = "erebus";
+    networkmanager.enable = true;
+    extraHosts = builtins.readFile (builtins.fetchurl "https://raw.githubusercontent.com/StevenBlack/hosts/master/alternates/social/hosts") + customHosts;
+  };
   
   hardware.firmware = [ pkgs.firmwareLinuxNonfree ];
   hardware.opengl.enable = true;
@@ -188,6 +212,8 @@
       };
     };
   };
+
+  security.sudo.wheelNeedsPassword = false; # sudo doesn't prompt for a passwd
   
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.ross = {

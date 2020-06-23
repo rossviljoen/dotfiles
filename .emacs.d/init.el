@@ -1,4 +1,3 @@
-(server-mode)
 (add-to-list 'load-path "~/.emacs.d/lisp")
 
 (custom-set-variables
@@ -62,22 +61,38 @@
 (use-package smooth-scrolling
 	     :config
 	     (smooth-scrolling-mode t))
+
+;; Nix/NixOS development
 (use-package nix-mode)
+(use-package direnv
+  :config
+  (direnv-mode))
+
 (use-package haskell-mode
 	     :config
 	     (add-hook 'haskell-mode-hook 'interactive-haskell-mode))
+
+;; OCaml development
 (use-package tuareg
   :config
-  (add-to-list 'load-path "~/.nix-profile/share/emacs/site-lisp")
-  (require 'merlin)
-  (add-hook 'tuareg-mode-hook 'merlin-mode t)
+  (setq tuareg-prettify-symbols-full t)
+  (add-hook 'tuareg-mode-hook #'prettify-symbols-mode))
+(use-package merlin
+  :hook (tuareg-mode . merlin-mode)
+  :config
   (setq merlin-command "ocamlmerlin"))
+(use-package ocp-indent)
 (use-package utop
-  )
+  :config
+  (add-hook 'tuareg-mode-hook 'utop-minor-mode)
+  (setq utop-command "dune utop . -- -emacs")
+  (defun utop--supports-company ()      ; Fixes dune utop not using company
+    (featurep 'company)))
+
 (use-package sudo-edit)
 (use-package base16-theme
   :config
-  (load-theme (intern (or (getenv "B16THEME") "base16-nord")) t)) ;; Try to load a theme from env variable
+  (load-theme (intern (or (getenv "THEME") "base16-nord")) t)) ;; Try to load a theme from env variable
 (use-package visual-fill-column)
 (use-package speed-type)
 (use-package counsel
@@ -133,7 +148,13 @@
 ;; (use-package elpy
 ;;   :init
 ;;   (elpy-enable))
-(use-package jupyter)
+(use-package julia-mode)
+(use-package jupyter
+  :bind
+  (("C-c C-e" . jupyter-eval-line-or-region)
+   ("C-c C-r" . jupyter-eval-region)
+   ("C-c C-b" . jupyter-eval-buffer)
+   ("C-c C-f" . jupyter-eval-defun)))
 (use-package rainbow-mode)
 (use-package native-complete
   :init
@@ -142,20 +163,28 @@
 (require 'jupyter)
 (require 'dired-x)
 
-;; Miscellaneous emacs configuration
-(let ((autosave-dir (concat user-emacs-directory "auto-saves/")))
-  (unless (file-exists-p autosave-dir)
-    (make-directory autosave-dir)))
+;; Set better defaults
+(setq user-full-name "Ross Viljoen"
+      user-mail-address "ross@viljoen.co.uk")
+(tooltip-mode -1)
+(tool-bar-mode -1)
+(menu-bar-mode -1)
+(scroll-bar-mode -1)
+(setq inhibit-splash-screen t)
+(setq inhibit-startup-message t)
+(delete-selection-mode +1)
+(defalias 'yes-or-no-p 'y-or-n-p)
 (setq auto-save-file-name-transforms
-      `((".*" ,(concat user-emacs-directory "auto-saves/") t)))
+      `((".*" ,temporary-file-directory t)))
 (setq backup-directory-alist
-      `(("." . ,(expand-file-name
-                 (concat user-emacs-directory "backups")))))
+      `((".*" . ,temporary-file-directory)))
 (setq dired-dwim-target t)
 (setq display-line-numbers-type 'relative)
 (global-display-line-numbers-mode t)
-;; 
 (global-set-key (kbd "M-SPC") 'cycle-spacing)
+(electric-pair-mode t)
+(setq-default tab-width 2)
+(setq-default indent-tabs-mode nil)
 
 (connection-local-set-profile-variables
  'remote-bash
